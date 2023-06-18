@@ -18,28 +18,32 @@ C_OBJ	= 	$(C_SRC:.c=.o)
 BS_OBJ	=	$(BS_SRC:.c=.o)
 BC_OBJ	= 	$(BC_SRC:.c=.o)
 
-FT_PRINTF_PATH	=	./ft_printf
-FT_PRINTF		=	$(FT_PRINTF_PATH)/libftprintf.a
+LIBFT_PATH	=	./libft
+LIBFT	=	$(LIBFT_PATH)/libft.a
 
-$(FT_PRINTF):
-	make -C $(FT_PRINTF_PATH) all
+all:	$(LIBFT) $(SERVER) $(CLIENT)
+
+$(LIBFT):
+	if [ ! -d "$(LIBFT_PATH)" ]; then \
+		git clone https://github.com/Kingsolomon445/42_libft libft; \
+	fi
+	make -C $(LIBFT_PATH) all
 	
-all:	$(FT_PRINTF) $(SERVER) $(CLIENT)
 
-bonus:	$(FT_PRINTF) $(SERVER_BONUS) $(CLIENT_BONUS)
+bonus:	$(LIBFT) $(SERVER_BONUS) $(CLIENT_BONUS)
 
 
 $(SERVER): $(S_OBJ)
-	$(CC) $(CFLAGS) $(FT_PRINTF) -o $@ $(S_OBJ)
+	$(CC) $(CFLAGS) $(LIBFT) -o $@ $(S_OBJ)
 
 $(CLIENT): $(C_OBJ)
-	$(CC) $(CFLAGS) $(FT_PRINTF) -o $@ $(C_OBJ)
+	$(CC) $(CFLAGS) $(LIBFT) -o $@ $(C_OBJ)
 
 $(SERVER_BONUS): $(BS_OBJ)
-	$(CC) $(CFLAGS) $(FT_PRINTF) -o $@ $(BS_OBJ)
+	$(CC) $(CFLAGS) $(LIBFT) -o $@ $(BS_OBJ)
 
 $(CLIENT_BONUS): $(BC_OBJ)
-	$(CC) $(CFLAGS) $(FT_PRINTF) -o $@ $(BC_OBJ)
+	$(CC) $(CFLAGS) $(LIBFT) -o $@ $(BC_OBJ)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(C_SRC) -c
@@ -48,12 +52,16 @@ $(CLIENT_BONUS): $(BC_OBJ)
 	$(CC) $(CFLAGS) $(BS_SRC) -c
 
 clean:
-	make -C $(FT_PRINTF_PATH) clean
 	$(RM) $(S_OBJ) $(C_OBJ) $(BS_OBJ) $(BC_OBJ)
+	if [ -d "$(LIBFT_PATH)" ]; then \
+		make -C $(LIBFT_PATH) clean; \
+	fi
 
 fclean:	clean
-	make -C $(FT_PRINTF_PATH) fclean
 	$(RM) $(SERVER) $(CLIENT) $(SERVER_BONUS) $(CLIENT_BONUS)
+	if [ -d "$(LIBFT_PATH)" ]; then \
+		make -C $(LIBFT_PATH) fclean; \
+	fi
 
 re:	fclean all bonus
 

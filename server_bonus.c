@@ -44,8 +44,8 @@ void	sig_handler(int sig_num, siginfo_t *siginfo, void *context)
 {
 	static int	cpid;
 
-	cpid = siginfo -> si_pid;
 	context = NULL;
+	cpid = siginfo -> si_pid;
 	eval_bin_to_char(sig_num, cpid);
 }
 
